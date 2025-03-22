@@ -14,6 +14,7 @@ def run(playwright: Playwright) -> None:
     context = browser.new_context(
         geolocation={"latitude": 4.60971, "longitude": -74.08175},
         permissions=["geolocation"],
+        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
     )
     page = context.new_page()
     page.goto("https://www.easycancha.com/profile/countries")
