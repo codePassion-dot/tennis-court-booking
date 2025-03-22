@@ -46,11 +46,11 @@ def run(playwright: Playwright) -> None:
     page.locator("div").filter(has_text="16:").nth(3).click()
     page.get_by_role("link", name="Siguiente").click()
     try_to_find_court(page)
-    with page.expect_response(
+    with page.expect_request(
         "https://www.easycancha.com/api/clubs/497/users/695283/relationships"
     ) as response_info:
         page.get_by_role("button", name="Agregar / Quitar jugadores").click()
-    print(page.content(), response_info.value.status)
+    print(response_info)
     page.screenshot(path="screenshot.png")
     page.get_by_text("Mariana Jaramillo").click()
     page.get_by_role("button", name="Seleccionar").click()
