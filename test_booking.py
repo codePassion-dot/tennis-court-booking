@@ -46,6 +46,7 @@ def run(playwright: Playwright) -> None:
     page.locator("div").filter(has_text="16:").nth(3).click()
     page.get_by_role("link", name="Siguiente").click()
     try_to_find_court(page)
+    page.on("dialog", lambda dialog: dialog.accept())
     with page.expect_request(
         "https://www.easycancha.com/api/clubs/497/users/695283/relationships"
     ) as response_info:
