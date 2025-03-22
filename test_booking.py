@@ -48,7 +48,7 @@ def run(playwright: Playwright) -> None:
     try_to_find_court(page)
     page.get_by_role("button", name="Agregar / Quitar jugadores").click()
     page.wait_for_selector("div.modal-content", state="visible")
-    page.wait_for_selector("div.mobileListItemV2", state="attached")
+    page.wait_for_selector("span.ng-binding", state="visible")
     page.screenshot(path="screenshot.png")
     page.get_by_text("Mariana Jaramillo").click()
     page.get_by_role("button", name="Seleccionar").click()
