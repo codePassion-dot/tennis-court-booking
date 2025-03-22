@@ -5,7 +5,6 @@ from playwright.sync_api import (
     TimeoutError as PlaywrightTimeoutError,
 )
 import os
-import time
 
 
 def run(playwright: Playwright) -> None:
@@ -13,8 +12,10 @@ def run(playwright: Playwright) -> None:
         executable_path="/usr/bin/chromium",
         args=["--disable-gpu", "--headless", "--no-sandbox"],
         headless=True,
+        channel="chrome",
     )
     context = browser.new_context(
+        viewport={"width": 1920, "height": 1080},
         geolocation={"latitude": 4.60971, "longitude": -74.08175},
         permissions=["geolocation"],
         user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -45,9 +46,8 @@ def run(playwright: Playwright) -> None:
     page.get_by_role("link", name="Siguiente").click()
     try_to_find_court(page)
     page.get_by_role("button", name="Agregar / Quitar jugadores").click()
-    page.get_by_text(
-        "Juan Jacobo Jaramillo Aristizábal Jose Peña Juan Camilo Cardona Arias Juan"
-    ).click()
+    page.wait_for_selector("text=Mariana Jaramillo")
+    page.get_by_text("Mariana Jaramillo").click()
     page.get_by_role("button", name="Seleccionar").click()
     page.get_by_role("button", name="Reservar").click()
     page.get_by_role("heading", name="¡ Juan Jacobo Tu reserva ya").click()
