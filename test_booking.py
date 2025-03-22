@@ -47,7 +47,7 @@ def run(playwright: Playwright) -> None:
     page.get_by_role("link", name="Siguiente").click()
     try_to_find_court(page)
     page.get_by_role("button", name="Agregar / Quitar jugadores").click()
-    page.get_by_text("Mariana Jaramillo").click()
+    page.locator("div:nth-child(5) > .pointer > .fa").click()
     page.get_by_role("button", name="Seleccionar").click()
     page.get_by_role("button", name="Reservar").click()
     page.get_by_role("heading", name="¡ Juan Jacobo Tu reserva ya").click()
