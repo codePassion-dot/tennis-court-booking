@@ -23,7 +23,6 @@ def run(playwright: Playwright) -> None:
         bypass_csp=True,
     )
     page = context.new_page()
-    page.on("dialog", lambda dialog: dialog.accept())
     page.goto("https://www.easycancha.com/profile/countries")
     page.get_by_role("link", name="Colombia").click()
     page.get_by_role("button", name="Ok").click()
@@ -48,6 +47,7 @@ def run(playwright: Playwright) -> None:
     page.get_by_role("link", name="Siguiente").click()
     try_to_find_court(page)
     page.get_by_role("button", name="Agregar / Quitar jugadores").click()
+    page.wait_for_selector("div.modal-content")
     page.get_by_text("Mariana Jaramillo").click()
     page.get_by_role("button", name="Seleccionar").click()
     page.get_by_role("button", name="Reservar").click()
