@@ -9,7 +9,9 @@ import time
 
 
 def run(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True)
+    browser = playwright.chromium.launch(
+        executable_path="/usr/bin/chromium", args=["--disable-gpu"], headless=True
+    )
     context = browser.new_context(
         geolocation={"latitude": 4.60971, "longitude": -74.08175},
         permissions=["geolocation"],
