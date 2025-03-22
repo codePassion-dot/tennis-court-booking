@@ -43,15 +43,12 @@ def run(playwright: Playwright) -> None:
     date, weekday = get_date_and_weekday()
     page.get_by_text(f"{date} {weekday}.").click()
     page.get_by_text("60 min.").click()
-    page.locator("div").filter(has_text="16:").nth(3).click()
+    page.locator("div").filter(has_text="14:").nth(3).click()
     page.get_by_role("link", name="Siguiente").click()
     try_to_find_court(page)
-    page.on("dialog", lambda dialog: dialog.accept())
-    with page.expect_request(
-        "https://www.easycancha.com/api/clubs/497/users/695283/relationships"
-    ) as response_info:
-        page.get_by_role("button", name="Agregar / Quitar jugadores").click()
-    print(response_info)
+    page.get_by_role("button", name="Agregar / Quitar jugadores").click()
+    page.wait_for_selector("div.modal-content", state="visible")
+    page.wait_for_selector("div.mobileListItemV2", state="attached")
     page.screenshot(path="screenshot.png")
     page.get_by_text("Mariana Jaramillo").click()
     page.get_by_role("button", name="Seleccionar").click()
