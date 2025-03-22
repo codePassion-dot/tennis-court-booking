@@ -48,6 +48,7 @@ def run(playwright: Playwright) -> None:
     try_to_find_court(page)
     page.get_by_role("button", name="Agregar / Quitar jugadores").click()
     page.wait_for_selector("div.modal-content")
+    print(page.content())
     page.get_by_text("Mariana Jaramillo").click()
     page.get_by_role("button", name="Seleccionar").click()
     page.get_by_role("button", name="Reservar").click()
