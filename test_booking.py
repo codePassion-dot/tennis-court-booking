@@ -8,7 +8,9 @@ import os
 
 
 def run(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True)
+    browser = playwright.chromium.launch(
+        executable_path="/usr/bin/chromium", args=["--disable-gpu"], headless=False
+    )
     context = browser.new_context(
         geolocation={"latitude": 4.60971, "longitude": -74.08175},
         permissions=["geolocation"],
@@ -34,7 +36,7 @@ def run(playwright: Playwright) -> None:
     date, weekday = get_date_and_weekday()
     page.get_by_text(f"{date} {weekday}.").click()
     page.get_by_text("60 min.").click()
-    page.locator("div").filter(has_text="8:").nth(3).click()
+    page.locator("div").filter(has_text="9:").nth(3).click()
     page.get_by_role("link", name="Siguiente").click()
     try_to_find_court(page)
     page.get_by_role("button", name="Agregar / Quitar jugadores").click()
