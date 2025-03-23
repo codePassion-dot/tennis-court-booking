@@ -9,10 +9,8 @@ import os
 
 def run(playwright: Playwright) -> None:
     browser = playwright.chromium.launch(
-        executable_path="/usr/bin/chromium",
         args=["--disable-gpu", "--headless", "--no-sandbox"],
         headless=True,
-        channel="chrome",
     )
     context = browser.new_context(
         viewport={"width": 1920, "height": 1080},
@@ -22,7 +20,6 @@ def run(playwright: Playwright) -> None:
         user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
         bypass_csp=True,
     )
-    context.clear_cookies()
     page = context.new_page()
     page.goto("https://www.easycancha.com/profile/countries")
     page.get_by_role("link", name="Colombia").click()
@@ -44,11 +41,16 @@ def run(playwright: Playwright) -> None:
     date, weekday = get_date_and_weekday()
     page.get_by_text(f"{date} {weekday}.").click()
     page.get_by_text("60 min.").click()
-    page.locator("div").filter(has_text="14:").nth(3).click()
+    time = "9:"
+    if weekday == "sáb" or weekday == "dom":
+        time = "10:"
+    custom_time = os.getenv("TIME", "")
+    if int(custom_time) >= 6 and int(custom_time) <= 21:
+        time = f"{custom_time}:"
+    page.locator("div").filter(has_text=time).nth(3).click()
     page.get_by_role("link", name="Siguiente").click()
     try_to_find_court(page)
     page.get_by_role("button", name="Agregar / Quitar jugadores").click()
-    page.screenshot(path="screenshot.png")
     page.get_by_text("Mariana Jaramillo").click()
     page.get_by_role("button", name="Seleccionar").click()
     page.get_by_role("button", name="Reservar").click()
@@ -68,19 +70,24 @@ def get_date_and_weekday():
         5: "sáb",
         6: "dom",
     }
-    month_day_number = datetime.datetime.now().day + 1
-    weekday_number = datetime.datetime.now().weekday() + 1
+    month_day_number = (datetime.datetime.now().day + 1) % 31
+    weekday_number = (datetime.datetime.now().weekday() + 1) % 7
     return month_day_number, es_weekday_first_three_letters[weekday_number]
 
 
-def try_to_find_court(page, retries=4):
-    try:
-        page.get_by_text(f"Cancha {retries}").click(timeout=1500)
-    except PlaywrightTimeoutError:
-        if retries > 1:
-            try_to_find_court(page, retries - 1)
-        else:
-            raise Exception("Court not found")
+def try_to_find_court(page):
+    mappings = {
+        1: 4,
+        2: 1,
+        3: 2,
+        4: 3,
+    }
+    for i in range(1, 5):
+        try:
+            page.get_by_text(f"Cancha {mappings[i]}").click(timeout=1500)
+            break
+        except PlaywrightTimeoutError:
+            continue
 
 
 with sync_playwright() as playwright:
