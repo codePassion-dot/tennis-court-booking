@@ -24,7 +24,6 @@ def run(playwright: Playwright) -> None:
     page.get_by_role("textbox", name="Email").click()
     email = os.getenv("EMAIL", "")
     password = os.getenv("PASSWORD", "")
-    print(f"Email: {email}, Password: {password}")
     page.get_by_role("textbox", name="Email").fill(email)
     page.get_by_role("textbox", name="Clave").click()
     page.get_by_role("textbox", name="Clave").fill(password)
