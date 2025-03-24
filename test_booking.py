@@ -5,6 +5,7 @@ from playwright.sync_api import (
     TimeoutError as PlaywrightTimeoutError,
 )
 import os
+import calendar
 
 
 def run(playwright: Playwright) -> None:
@@ -57,17 +58,19 @@ def run(playwright: Playwright) -> None:
 
 
 def get_date_and_weekday():
-    es_weekday_first_three_letters = {
-        0: "lun",
-        1: "mar",
-        2: "mié",
-        3: "jue",
-        4: "vie",
-        5: "sáb",
-        6: "dom",
-    }
-    month_day_number = (datetime.datetime.now().day + 1) % 31
-    weekday_number = (datetime.datetime.now().weekday() + 1) % 7
+    es_weekday_first_three_letters = [
+        "lun",
+        "mar",
+        "mié",
+        "jue",
+        "vie",
+        "sáb",
+        "dom",
+    ]
+    date = datetime.datetime.now()
+    days_in_month = calendar.monthrange(date.year, date.month)[1] + 1
+    month_day_number = (date.day + 1) % days_in_month
+    weekday_number = (date.weekday() + 1) % 7
     return month_day_number, es_weekday_first_three_letters[weekday_number]
 
 
