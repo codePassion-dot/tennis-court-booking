@@ -9,16 +9,12 @@ import os
 
 def run(playwright: Playwright) -> None:
     browser = playwright.chromium.launch(
-        args=["--disable-gpu", "--headless", "--no-sandbox"],
         headless=True,
     )
     context = browser.new_context(
-        viewport={"width": 1920, "height": 1080},
-        screen={"width": 1920, "height": 1080},
         geolocation={"latitude": 4.60971, "longitude": -74.08175},
         permissions=["geolocation"],
         user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        bypass_csp=True,
     )
     page = context.new_page()
     page.goto("https://www.easycancha.com/profile/countries")
@@ -28,6 +24,7 @@ def run(playwright: Playwright) -> None:
     page.get_by_role("textbox", name="Email").click()
     email = os.getenv("EMAIL", "")
     password = os.getenv("PASSWORD", "")
+    print(f"Email: {email}, Password: {password}")
     page.get_by_role("textbox", name="Email").fill(email)
     page.get_by_role("textbox", name="Clave").click()
     page.get_by_role("textbox", name="Clave").fill(password)
@@ -44,8 +41,8 @@ def run(playwright: Playwright) -> None:
     time = "9:"
     if weekday == "sáb" or weekday == "dom":
         time = "10:"
-    custom_time = os.getenv("TIME", "")
-    if int(custom_time) >= 6 and int(custom_time) <= 21:
+    custom_time = os.getenv("TIME")
+    if custom_time is not None and int(custom_time) >= 6 and int(custom_time) <= 21:
         time = f"{custom_time}:"
     page.locator("div").filter(has_text=time).nth(3).click()
     page.get_by_role("link", name="Siguiente").click()
