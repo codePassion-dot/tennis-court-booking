@@ -11,13 +11,25 @@ import calendar
 def run(playwright: Playwright) -> None:
     browser = playwright.chromium.launch(
         headless=True,
+        args=[
+            "--disable-gpu",
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--headless",
+        ],
+        channel="chrome",
     )
     context = browser.new_context(
         geolocation={"latitude": 4.60971, "longitude": -74.08175},
+        viewport={"width": 1920, "height": 1080},
+        screen={"width": 1920, "height": 1080},
+        bypass_csp=True,
         permissions=["geolocation"],
-        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
     )
+    context.clear_cookies()
     page = context.new_page()
+    page.route("**", lambda route: route.continue_())
     page.goto("https://www.easycancha.com/profile/countries")
     page.get_by_role("link", name="Colombia").click()
     page.get_by_role("button", name="Ok").click()
@@ -51,6 +63,8 @@ def run(playwright: Playwright) -> None:
     page.get_by_text("Mariana Jaramillo").click()
     page.get_by_role("button", name="Seleccionar").click()
     page.get_by_role("button", name="Reservar").click()
+    page.wait_for_timeout(5000)
+    page.screenshot(path="booking.png")
     page.get_by_role("heading", name="¡ Juan Jacobo Tu reserva ya").click()
     # ---------------------
     context.close()

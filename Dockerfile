@@ -4,4 +4,4 @@ WORKDIR /code
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-CMD ["python3", "test_booking.py"]
+CMD ["pytest", "-s", "test_booking.py"]
