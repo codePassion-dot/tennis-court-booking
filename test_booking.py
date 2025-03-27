@@ -63,7 +63,6 @@ def run(playwright: Playwright) -> None:
     page.get_by_text("Mariana Jaramillo").click()
     page.get_by_role("button", name="Seleccionar").click()
     page.get_by_role("button", name="Reservar").click()
-    page.wait_for_timeout(5000)
     page.get_by_role("heading", name="¡ Juan Jacobo Tu reserva ya").click()
     # ---------------------
     context.close()

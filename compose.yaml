@@ -2,6 +2,7 @@ services:
   automation:
     build: .
     ipc: "host"
+    shm_size: 1gb
     user: pwuser
     security_opt:
       - seccomp=seccomp_profile.json
