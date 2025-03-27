@@ -10,3 +10,4 @@ services:
     environment:
       - EMAIL=${EMAIL}
       - PASSWORD=${PASSWORD}
+      - TIME=${TIME}
