@@ -3,6 +3,7 @@ services:
     build: .
     ipc: "host"
     shm_size: 1gb
+    privileged: true
     user: pwuser
     security_opt:
       - seccomp=seccomp_profile.json
